@@ -1,0 +1,110 @@
+body, html {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #c9c9c9; /* Color de fondo opcional */
+}
+.parent {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-template-rows: repeat(8, 1fr);
+  gap: 2px;
+  padding: 2px;
+  border: solid 4px black;
+  width: 100vmin;
+  height: 100vmin;
+  max-width: 1000px;
+  max-height: 1000px;
+  background-color: white;
+  margin: auto;
+}
+.div1, .div2, .div3, .div4, .div5, .div6, .div7 {
+  border: solid 4px black;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 2px;
+  padding: 2px;
+  
+}
+
+
+.div1 { grid-area: 7 / 1 / span 2 / span 2; }
+.div2 { grid-area: 6 / 3 / span 3 / span 3; }
+.div3 { grid-area: 1 / 3 / span 3 / span 3; }
+.div4 { grid-area: 4 / 1 / span 2 / span 2; }
+.div5 { grid-area: 4 / 6 / span 2 / span 2; }
+.div6 { grid-area: 1 / 6 / span 2 / span 2; }
+.div7 { grid-area: 4 / 3 / span 2 / span 3; }
+
+.div1 > div, .div2 > div, .div3 > div, .div4 > div, .div5 > div, .div6 > div, .div7 > div {
+  border: solid 1px black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.8em;
+}
+.div1, .div4, .div5, .div6, .div7 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.5em;
+  text-align: center
+}
+.imagDomino{
+  width: 80%; /* Ajusta el ancho al 100% del contenedor padre */
+  height: auto; /* Mantiene la proporción de la imagen */
+  max-width: 80%; /* Limita el ancho máximo a 500px */
+  display: block;
+  margin: auto;
+}
+/*Poner la imagen pequeña en el gird 3x3*/
+.gridCell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.gridCell img {
+  max-width: 80%;
+  max-height: 80%;
+  object-fit: contain; /*para que se ajuste proporcionalmente*/
+}
+
+button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  outline: none;
+  cursor: pointer;
+  width: 150px;
+  height: 50px;
+  background-image: linear-gradient(to top, #D8D9DB 0%, #fff 80%, #FDFDFD 100%);
+  border-radius: 30px;
+  border: 1px solid #8F9092;
+  transition: all 0.2s ease;
+  font-family: "Source Sans Pro", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #606060;
+  text-shadow: 0 1px #fff;
+}
+
+button:hover {
+  box-shadow: 0 4px 3px 1px #FCFCFC, 0 6px 8px #D6D7D9, 0 -4px 4px #CECFD1, 0 -6px 4px #FEFEFE, inset 0 0 3px 3px #CECFD1;
+}
+
+button:active {
+  box-shadow: 0 4px 3px 1px #FCFCFC, 0 6px 8px #D6D7D9, 0 -4px 4px #CECFD1, 0 -6px 4px #FEFEFE, inset 0 0 5px 3px #999, inset 0 0 30px #aaa;
+}
+
+button:focus {
+  box-shadow: 0 4px 3px 1px #FCFCFC, 0 6px 8px #D6D7D9, 0 -4px 4px #CECFD1, 0 -6px 4px #FEFEFE, inset 0 0 5px 3px #999, inset 0 0 30px #aaa;
+}
+
+
