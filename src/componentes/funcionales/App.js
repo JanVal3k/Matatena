@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import styles from "../../styles/styles.module.css";
+import styles from "../../styles/styles.css";
 import DivPjs from "./DivPjUno";
 import { compararYEliminarImagenes } from "../clase/CompararDados";
 import ImagenRandom from "../clase/imagenRamdom";
