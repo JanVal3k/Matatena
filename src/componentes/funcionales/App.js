@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import styles from "../../styles/styles.css";
+import "../../styles/styles.css";
 import DivPjs from "./DivPjUno";
 import { compararYEliminarImagenes } from "../clase/CompararDados";
 import ImagenRandom from "../clase/imagenRamdom";
 import FinDelJuego from "../clase/FinDelJuego";
+
 //--------------------------
 export default function App() {
   //-- Estados para las imagenes
@@ -22,6 +23,7 @@ export default function App() {
   const iteracionesRef = useRef(0);
   const intervaloRef = useRef(null);
   const seleccionDePj = useRef(0);
+  //url de fondo del tablero o otro
 
   //funcion que randeriza las imagens o bueno actualiza el estado del cual depente que imagen se va a renderizar al primer renderizado
   // const handleImagenesRandomizadas = useCallback((img1, img2) => {
@@ -221,12 +223,17 @@ export default function App() {
     return grid.map((cell, index) => (
       <div
         key={index}
-        className={styles.gridCell}
+        className="flex justify-center shadow-xl rounded-2xl border-2 items-center w-full h-full"
         onDragOver={handleDragOver}
         onDrop={(e) => handleDrop(e, index, playerGrid)} //esto prepara el escuchador o LISTENER para cuando se ejecute el handleDrop al soltar la imagen en uno de los grid
       >
         {cell && (
-          <img src={cell.DadoImg} alt={`Imagen ${cell.id}`} draggable={false} />
+          <img
+            className="max-w-[90%] max-h-[90%] object-contain"
+            src={cell.DadoImg}
+            alt={`Imagen ${cell.id}`}
+            draggable={false}
+          />
         )}
       </div>
     ));
@@ -235,7 +242,7 @@ export default function App() {
   /*FUNCIONES PARA MOVER LA IMAGENS*/
 
   return (
-    <div className={styles.parent}>
+    <div className="grid grid-cols-7 grid-rows-8 gap-2 p-2 border-solid border-4 border-gray-200 rounded-2xl shadow-2xl w-[95vmin] h-[95vmin] max-w-[1000px] max-h-[1000px] bg-white">
       {needsUpdatePj1 && (
         <ImagenRandom
           onImagenesGeneradas={(img) => {
@@ -253,44 +260,58 @@ export default function App() {
         />
       )}
       <div
-        className={styles.div1}
+        className="flex items-center justify-center col-start-1 row-start-7 col-span-2 row-span-2 bg-rose-300 rounded-lg h-full w-full"
         onDragStart={(e) => handleDragStart(e, imagenPj1, "div1")}
       >
-        {imagenPj1?.DadoImg && (
-          <DivPjs.DivPjUno Src={imagenPj1.DadoImg} Id={imagenPj1.id} />
-        )}
+        <div className="h-[55%] w-[50%] shadow-2xl rounded-3xl bg-rose-200">
+          {imagenPj1?.DadoImg && (
+            <DivPjs.DivPjUno Src={imagenPj1.DadoImg} Id={imagenPj1.id} />
+          )}
+        </div>
       </div>
-      <div className={styles.div2}>{renderGrid(grid1, 1)}</div>
-      <div className={styles.div3}>{renderGrid(grid2, 2)}</div>
+      <div className="grid grid-cols-3 grid-rows-3 gap-1 p-1 col-start-3 row-start-6 col-span-3 row-span-3 flex justify-center items-center rounded-lg bg-red-400 ">
+        {renderGrid(grid1, 1)}
+      </div>
+      <div className="grid grid-cols-3 grid-rows-3 gap-1 p-1 col-start-3 row-start-1 col-span-3 row-span-3 flex justify-center items-center rounded-lg bg-emerald-400">
+        {renderGrid(grid2, 2)}
+      </div>
 
-      <div className={styles.div4}>
-        JUGADOR 1
+      <div className="flex flex-col justify-center items-center text-2xl text-center gap-1 p-1 col-start-1 row-start-4 col-span-2 row-span-2 rounded-lg bg-red-200">
+        <span className="font-['Source_Sans_Pro']">JUGADOR 1</span>
         <br />
-        puntaje:{puntajePj1}
+        <span className="font-['Source_Sans_Pro']">puntaje:{puntajePj1}</span>
       </div>
 
-      <div className={styles.div7}>
-        <button className={styles.buttonJugar} onClick={handleClick}>
+      <div className="flex justify-center items-center gap-1 p-1 col-start-3 row-start-4 col-span-3 row-span-2 rounded-2xl bg-sky-300">
+        <button
+          className="flex items-center justify-center w-[150px] h-[50px] rounded-3xl border-2 border-amber-400 text-black text-sm font-semibold      cursor-pointer transition-all duration-400 font-['Source_Sans_Pro'] bg-gradient-to-t from-amber-200 via-white to-amber-300 shadow-sm hover:shadow-custom active:shadow-custom-active focus:shadow-custom-active focus:outline-none"
+          onClick={handleClick}
+        >
           JUGAR
         </button>
-        <button className={styles.buttonJugar} onClick={handleClick2}>
+        <button
+          className="flex items-center justify-center w-[150px] h-[50px] rounded-3xl border-2 border-amber-400 text-black text-sm font-semibold      cursor-pointer transition-all duration-400 font-['Source_Sans_Pro'] bg-gradient-to-t from-amber-200 via-white to-amber-300 shadow-sm hover:shadow-custom active:shadow-custom-active focus:shadow-custom-active focus:outline-none"
+          onClick={handleClick2}
+        >
           NUEVO JUEGO
         </button>
       </div>
 
-      <div className={styles.div5}>
-        JUGADOR 2
+      <div className="flex flex-col justify-center items-center text-2xl text-center gap-1 p-1 col-start-6 row-start-4 col-span-2 row-span-2 rounded-lg bg-emerald-200 ">
+        <span className="font-['Source_Sans_Pro']">JUGADOR 2</span>
         <br />
-        puntaje:{puntajePj2}
+        <span className="font-['Source_Sans_Pro']">puntaje:{puntajePj2}</span>
       </div>
 
       <div
-        className={styles.div6}
+        className="flex items-center justify-center col-start-6 row-start-1 col-span-2 row-span-2 bg-emerald-300 rounded-lg shadow-md h-full w-full "
         onDragStart={(e) => handleDragStart(e, imagenPj2, "div6")}
       >
-        {imagenPj2?.DadoImg && (
-          <DivPjs.DivPjDos Src={imagenPj2?.DadoImg} Id={imagenPj2?.id} />
-        )}
+        <div className="h-[55%] w-[50%] shadow-2xl rounded-3xl bg-emerald-200">
+          {imagenPj2?.DadoImg && (
+            <DivPjs.DivPjDos Src={imagenPj2?.DadoImg} Id={imagenPj2?.id} />
+          )}
+        </div>
       </div>
     </div>
   );
