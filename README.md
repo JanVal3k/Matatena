@@ -1,6 +1,6 @@
 # :video_game: Matatena :game_die:
 
-**Matatena** es un minijuego inspirado en uno de los juegos presentes en **Cult of the Lamb**. Este proyecto ha sido desarrollado con **HTML**, **JavaScript**, **React**, y **CSS**. Es un proyecto sin ánimo de lucro y se ha creado únicamente con fines educativos y de portafolio, sin intención de infringir los derechos de autor de **Cult of the Lamb**.
+**Matatena** es un minijuego inspirado en uno de los juegos presentes en **Cult of the Lamb**. Este proyecto ha sido desarrollado con **HTML**, **JavaScript**, **React**, y **Tailwind CSS**. Es un proyecto sin ánimo de lucro y se ha creado únicamente con fines educativos y de portafolio, sin intención de infringir los derechos de autor de **Cult of the Lamb**.
 
 ## Descripción del Juego :video_game:
 
@@ -16,7 +16,7 @@
 ## Tecnologías Utilizadas
 
 - **<img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/react/react-original-wordmark.svg" alt="react" width="40" height="40"/>** para la gestión de componentes.
-- **<img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/html5/html5-original-wordmark.svg" alt="html5" width="40" height="40"/> y <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/css3/css3-original-wordmark.svg" alt="css3" width="40" height="40"/>** para la estructura y el diseño.
+- **<img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/html5/html5-original-wordmark.svg" alt="html5" width="40" height="40"/> y <img src="https://www.vectorlogo.zone/logos/tailwindcss/tailwindcss-icon.svg" alt="tailwind" width="40" height="40"/>** para la estructura y el diseño.
 - <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/javascript/javascript-original.svg" alt="javascript" width="40" height="40"/> para la lógica del juego.
 
 ## Notas
