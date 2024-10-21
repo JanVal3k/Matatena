@@ -31,6 +31,8 @@ export default function App() {
     tittle: "",
     message: "",
   });
+  //Estado para mostar el fin del juego
+  const [showFinDelJuego, setShowFinDelJuego] = useState(false);
 
   //funcion que randeriza las imagens o bueno actualiza el estado del cual depente que imagen se va a renderizar al primer renderizado
   // const handleImagenesRandomizadas = useCallback((img1, img2) => {
@@ -62,13 +64,12 @@ export default function App() {
     // utilizamos el useEffect para que se ejecute el calcularPuntaje cada que se actualice alguno de los arrays que acumulan los valores
     setPuntajePj1(cacularPuntaje(grid1));
     setPuntajePj2(cacularPuntaje(grid2));
-    FinDelJuego(grid1, grid2, puntajePj1, puntajePj2);
-    PopOver(grid1, grid2, puntajePj1, puntajePj2);
     const isGrid1Full = grid1.every((cell) => cell !== null);
     const isGrid2Full = grid2.every((cell) => cell !== null);
 
     if (isGrid1Full || isGrid2Full) {
       handleClick2();
+      setShowFinDelJuego(true);
     }
   }, [grid1, grid2]);
 
@@ -146,6 +147,7 @@ export default function App() {
   const handleClosePopOver = useCallback(() => {
     setPopOverProps((prev) => ({ ...prev, isOpen: false }));
     // reiniciamos juego
+    setShowFinDelJuego(false);
     setImagenPj1({});
     setImagenPj2({});
     //----------------------------
@@ -197,8 +199,6 @@ export default function App() {
 
         setGrid1(newGrid1); // actualiza los grids
         setGrid2(newGrid2);
-        //------- Para finalizar el juego
-        FinDelJuego(grid1, grid2, puntajePj1, puntajePj2);
         // Generar imágenes para el jugador 2 con límite y retraso
         iteracionesRef.current = 0;
         const interval = setInterval(() => {
@@ -217,8 +217,6 @@ export default function App() {
 
         setGrid1(newGrid1);
         setGrid2(newGrid2);
-        //------- Para finalizar el juego
-        FinDelJuego(grid1, grid2, puntajePj1, puntajePj2);
         // Generar imágenes para el jugador 2 con límite y retraso
         iteracionesRef.current = 0;
         const interval = setInterval(() => {
@@ -310,7 +308,7 @@ export default function App() {
           className="flex items-center justify-center w-[150px] h-[50px] rounded-3xl border-2 border-amber-400 text-black text-sm font-semibold      cursor-pointer transition-all duration-400 font-['Source_Sans_Pro'] bg-gradient-to-t from-amber-200 via-white to-amber-300 shadow-sm hover:shadow-custom active:shadow-custom-active focus:shadow-custom-active focus:outline-none"
           onClick={handleClick2}
         >
-          REINICIAR JUEGO...
+          REINICIAR JUEGO
         </button>
       </div>
 
@@ -330,13 +328,38 @@ export default function App() {
           )}
         </div>
       </div>
-      <PopOver
-        isOpen={popOverProps.isOpen}
-        onClose={() => setPopOverProps((prev) => ({ ...prev, isOpen: false }))}
-        title={popOverProps.tittle}
-        message={popOverProps.message}
-        onNewGame={handleClosePopOver}
-      />
+
+      {showFinDelJuego && (
+        <FinDelJuego
+          grid1={grid1}
+          grid2={grid2}
+          puntajePj1={puntajePj1}
+          puntajePj2={puntajePj2}
+          onReiniciar={handleClosePopOver}
+        />
+      )}
+      {!showFinDelJuego && (
+        <PopOver
+          isOpen={popOverProps.isOpen}
+          onClose={() =>
+            setPopOverProps((prev) => ({ ...prev, isOpen: false }))
+          }
+          title={popOverProps.tittle}
+          message={popOverProps.message}
+          onNewGame={handleClosePopOver}
+        />
+      )}
     </div>
   );
 }
+// && (
+//   <PopOver
+//     isOpen={popOverProps.isOpen}
+//     onClose={() =>
+//       setPopOverProps((prev) => ({ ...prev, isOpen: false }))
+//     }
+//     title={popOverProps.tittle}
+//     message={popOverProps.message}
+//     onNewGame={handleClosePopOver}
+//   />
+// )
