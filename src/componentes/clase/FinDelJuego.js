@@ -8,16 +8,12 @@ const FinDelJuego = ({ grid1, grid2, puntajePj1, puntajePj2, onReiniciar }) => {
     const isGrid2Full = grid2.every((cell) => cell !== null);
 
     if (isGrid1Full || isGrid2Full) {
-      console.log("a ver depuramos inicial");
       let winner;
       if (puntajePj1 > puntajePj2) {
         winner = "Jugador 1";
-        console.log("a ver depuramos jugador 1 gano");
       } else if (puntajePj2 > puntajePj1) {
-        console.log("a ver depuramos jugador 2 gano");
         winner = "Jugador 2";
       } else {
-        console.log("a ver depuramos empate");
         winner = "Empate";
       }
 
@@ -31,7 +27,6 @@ const FinDelJuego = ({ grid1, grid2, puntajePj1, puntajePj2, onReiniciar }) => {
     const { terminado } = verificarFinDelJuego();
     if (terminado) {
       setIsOpen(true);
-      console.log("Depuracion del useEffect terminado = a true");
     }
   }, [grid1, grid2, puntajePj1, puntajePj2]);
 
