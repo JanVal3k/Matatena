@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import "../../styles/styles.css";
+import style from "../../styles/background.module.css";
 import DivPjs from "./DivPjUno";
 import { compararYEliminarImagenes } from "../clase/CompararDados";
 import ImagenRandom from "../clase/imagenRamdom";
 import FinDelJuego from "../clase/FinDelJuego";
+import PopOver from "./Popover";
 
 //--------------------------
 export default function App() {
@@ -23,7 +25,12 @@ export default function App() {
   const iteracionesRef = useRef(0);
   const intervaloRef = useRef(null);
   const seleccionDePj = useRef(0);
-  //url de fondo del tablero o otro
+  //Estados para popOver
+  const [popOverProps, setPopOverProps] = useState({
+    isOpen: false,
+    tittle: "",
+    message: "",
+  });
 
   //funcion que randeriza las imagens o bueno actualiza el estado del cual depente que imagen se va a renderizar al primer renderizado
   // const handleImagenesRandomizadas = useCallback((img1, img2) => {
@@ -56,6 +63,7 @@ export default function App() {
     setPuntajePj1(cacularPuntaje(grid1));
     setPuntajePj2(cacularPuntaje(grid2));
     FinDelJuego(grid1, grid2, puntajePj1, puntajePj2);
+    PopOver(grid1, grid2, puntajePj1, puntajePj2);
     const isGrid1Full = grid1.every((cell) => cell !== null);
     const isGrid2Full = grid2.every((cell) => cell !== null);
 
@@ -129,6 +137,15 @@ export default function App() {
   }, []);
   // BOTON PARA JUEGO NUEVO
   const handleClick2 = useCallback(() => {
+    setPopOverProps({
+      isOpen: true,
+      tittle: "Reiniciando juego...",
+      message: "Si quiere iniciar de nuevo dale en 'jugar'",
+    });
+  }, []);
+  const handleClosePopOver = useCallback(() => {
+    setPopOverProps((prev) => ({ ...prev, isOpen: false }));
+    // reiniciamos juego
     setImagenPj1({});
     setImagenPj2({});
     //----------------------------
@@ -144,9 +161,7 @@ export default function App() {
     iteracionesRef.current = 0;
     intervaloRef.current = null;
     seleccionDePj.current = 0;
-    alert(`Gracias por jugar`);
   }, []);
-
   /*FUNCIONES PARA MOVER LA IMAGENS*/
   // 1 se incia cuando el usuario empieza a arrastrar
   const handleDragStart = (e, imagen, sourceGrid) => {
@@ -242,7 +257,9 @@ export default function App() {
   /*FUNCIONES PARA MOVER LA IMAGENS*/
 
   return (
-    <div className="grid grid-cols-7 grid-rows-8 gap-2 p-2 border-solid border-4 border-gray-200 rounded-2xl shadow-2xl w-[95vmin] h-[95vmin] max-w-[1000px] max-h-[1000px] bg-white">
+    <div
+      className={`grid grid-cols-7 grid-rows-8 gap-2 p-2 border-solid border-4 border-gray-200 rounded-2xl shadow-2xl w-[95vmin] h-[95vmin] max-w-[1000px] max-h-[1000px] ${style.fondoEstrellas}`}
+    >
       {needsUpdatePj1 && (
         <ImagenRandom
           onImagenesGeneradas={(img) => {
@@ -293,7 +310,7 @@ export default function App() {
           className="flex items-center justify-center w-[150px] h-[50px] rounded-3xl border-2 border-amber-400 text-black text-sm font-semibold      cursor-pointer transition-all duration-400 font-['Source_Sans_Pro'] bg-gradient-to-t from-amber-200 via-white to-amber-300 shadow-sm hover:shadow-custom active:shadow-custom-active focus:shadow-custom-active focus:outline-none"
           onClick={handleClick2}
         >
-          NUEVO JUEGO
+          REINICIAR JUEGO...
         </button>
       </div>
 
@@ -313,6 +330,13 @@ export default function App() {
           )}
         </div>
       </div>
+      <PopOver
+        isOpen={popOverProps.isOpen}
+        onClose={() => setPopOverProps((prev) => ({ ...prev, isOpen: false }))}
+        title={popOverProps.tittle}
+        message={popOverProps.message}
+        onNewGame={handleClosePopOver}
+      />
     </div>
   );
 }

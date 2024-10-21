@@ -1,0 +1,6 @@
+.fondoEstrellas{
+    background-image: url('../assets/image/fondoestrellas.gif');
+    background-size: cover;
+    background-position: center;
+    background-repeat: repeat;
+  }
