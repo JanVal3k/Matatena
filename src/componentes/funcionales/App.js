@@ -33,6 +33,8 @@ export default function App() {
   });
   //Estado para mostar el fin del juego
   const [showFinDelJuego, setShowFinDelJuego] = useState(false);
+  // Estado para elegir jugadro o npc
+  const [elegirNpc, setElegirNpc] = useState();
 
   //funcion que randeriza las imagens o bueno actualiza el estado del cual depente que imagen se va a renderizar al primer renderizado
   // const handleImagenesRandomizadas = useCallback((img1, img2) => {
