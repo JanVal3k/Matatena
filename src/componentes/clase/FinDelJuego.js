@@ -2,35 +2,35 @@ import React, { useState, useEffect } from "react";
 
 const FinDelJuego = ({ grid1, grid2, puntajePj1, puntajePj2, onReiniciar }) => {
   const [isOpen, setIsOpen] = useState(false);
-
-  const verificarFinDelJuego = () => {
-    const isGrid1Full = grid1.every((cell) => cell !== null);
-    const isGrid2Full = grid2.every((cell) => cell !== null);
-
-    if (isGrid1Full || isGrid2Full) {
-      let winner;
-      if (puntajePj1 > puntajePj2) {
-        winner = "Jugador 1";
-      } else if (puntajePj2 > puntajePj1) {
-        winner = "Jugador 2";
-      } else {
-        winner = "Empate";
-      }
-
-      return { terminado: true, winner };
-    }
-
-    return { terminado: false, winner: null };
-  };
+  const [winner, setWinner] = useState(null);
 
   useEffect(() => {
-    const { terminado } = verificarFinDelJuego();
+    const verificarFinDelJuego = () => {
+      const isGrid1Full = grid1.every((cell) => cell !== null);
+      const isGrid2Full = grid2.every((cell) => cell !== null);
+
+      if (isGrid1Full || isGrid2Full) {
+        let ganador;
+        if (puntajePj1 > puntajePj2) {
+          ganador = "Jugador 1";
+        } else if (puntajePj2 > puntajePj1) {
+          ganador = "Jugador 2";
+        } else {
+          ganador = "Empate";
+        }
+
+        return { terminado: true, ganador };
+      }
+
+      return { terminado: false, ganador: null };
+    };
+
+    const { terminado, ganador } = verificarFinDelJuego();
     if (terminado) {
+      setWinner(ganador);
       setIsOpen(true);
     }
   }, [grid1, grid2, puntajePj1, puntajePj2]);
-
-  const { winner } = verificarFinDelJuego();
 
   if (!isOpen) return null;
 
@@ -48,6 +48,7 @@ const FinDelJuego = ({ grid1, grid2, puntajePj1, puntajePj2, onReiniciar }) => {
             onClick={() => {
               onReiniciar();
               setIsOpen(false);
+              setWinner(null);
             }}
             className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200"
           >

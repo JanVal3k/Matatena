@@ -1,5 +1,3 @@
-import React from "react";
-
 export const compararYEliminarImagenes = (gridOrigen, gridDestino, columna) => {
   // Calculamos los índices de la columna seleccionada (0, 1 o 2)
   const indicesColumna = [columna, columna + 3, columna + 6];
