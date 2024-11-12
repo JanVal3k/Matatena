@@ -146,6 +146,17 @@ export default function App() {
       message: "Si quiere iniciar de nuevo dale en 'jugar'",
     });
   }, []);
+  const handleClick3 = useCallback(() => {
+    setPopOverProps({
+      isOpen: true,
+      tittle: "COMO JUGAR!",
+      message:
+        "1. Se suman puntos dependiendo del valor de cada cara del dado.\n" +
+        "2. Se eliminan puntos del contrincante cuando: Se pone una cara de dado en la columna paralela y del mismo valor de esta.\n" +
+        "3. El juego termina cuando se complete uno de los tableros.\n" +
+        "4. El GANADOR sera quien tenga mayor puntaje. ",
+    });
+  }, []);
   const handleClosePopOver = useCallback(() => {
     setPopOverProps((prev) => ({ ...prev, isOpen: false }));
     // reiniciamos juego
@@ -257,100 +268,120 @@ export default function App() {
   /*FUNCIONES PARA MOVER LA IMAGENS*/
 
   return (
-    <div
-      className={`grid grid-cols-7 grid-rows-8 gap-2 p-2 border-solid border-4 border-gray-200 rounded-2xl shadow-2xl w-[95vmin] h-[95vmin] max-w-[1000px] max-h-[1000px] ${style.fondoEstrellas}`}
-    >
-      {needsUpdatePj1 && (
-        <ImagenRandom
-          onImagenesGeneradas={(img) => {
-            setImagenPj1(img);
-            setNeedsUpdatePj1(false);
-          }}
-        />
-      )}
-      {needsUpdatePj2 && (
-        <ImagenRandom
-          onImagenesGeneradas={(img) => {
-            setImagenPj2(img);
-            setNeedsUpdatePj2(false);
-          }}
-        />
-      )}
+    <>
       <div
-        className="flex items-center justify-center col-start-1 row-start-7 col-span-2 row-span-2 bg-rose-300 rounded-lg h-full w-full"
-        onDragStart={(e) => handleDragStart(e, imagenPj1, "div1")}
+        className={`grid grid-cols-7 grid-rows-8 gap-2 p-2 border-solid border-4 border-gray-200 rounded-2xl shadow-2xl w-[95vmin] h-[95vmin] max-w-[1000px] max-h-[1000px] ${style.fondoEstrellas}`}
       >
-        <div className="h-[55%] w-[50%] shadow-2xl rounded-3xl bg-rose-200">
-          {imagenPj1?.DadoImg && (
-            <DivPjs.DivPjUno Src={imagenPj1.DadoImg} Id={imagenPj1.id} />
-          )}
+        {needsUpdatePj1 && (
+          <ImagenRandom
+            onImagenesGeneradas={(img) => {
+              setImagenPj1(img);
+              setNeedsUpdatePj1(false);
+            }}
+          />
+        )}
+        {needsUpdatePj2 && (
+          <ImagenRandom
+            onImagenesGeneradas={(img) => {
+              setImagenPj2(img);
+              setNeedsUpdatePj2(false);
+            }}
+          />
+        )}
+        <div
+          className="flex items-center justify-center col-start-1 row-start-7 col-span-2 row-span-2 bg-rose-300 rounded-lg h-full w-full"
+          onDragStart={(e) => handleDragStart(e, imagenPj1, "div1")}
+        >
+          <div className="h-[55%] w-[50%] shadow-2xl rounded-3xl bg-rose-200">
+            {imagenPj1?.DadoImg && (
+              <DivPjs.DivPjUno Src={imagenPj1.DadoImg} Id={imagenPj1.id} />
+            )}
+          </div>
+        </div>
+        <div className="grid grid-cols-3 grid-rows-3 gap-1 p-1 col-start-3 row-start-6 col-span-3 row-span-3 flex justify-center items-center rounded-lg bg-red-400 ">
+          {renderGrid(grid1, 1)}
+        </div>
+        <div className="grid grid-cols-3 grid-rows-3 gap-1 p-1 col-start-3 row-start-1 col-span-3 row-span-3 flex justify-center items-center rounded-lg bg-emerald-400">
+          {renderGrid(grid2, 2)}
+        </div>
+
+        <div className="flex flex-col justify-center items-center text-2xl text-center gap-1 p-1 col-start-1 row-start-4 col-span-2 row-span-2 rounded-lg bg-red-200">
+          <span className="font-['Source_Sans_Pro']">JUGADOR 1</span>
+          <br />
+          <span className="font-['Source_Sans_Pro']">puntaje:{puntajePj1}</span>
+        </div>
+
+        <div className="flex justify-center items-center gap-1 p-1 col-start-3 row-start-4 col-span-3 row-span-2 rounded-2xl bg-sky-300">
+          <button
+            className="flex items-center justify-center w-[150px] h-[50px] rounded-3xl border-2 border-amber-400 text-black text-sm font-semibold      cursor-pointer transition-all duration-400 font-['Source_Sans_Pro'] bg-gradient-to-t from-amber-200 via-white to-amber-300 shadow-sm hover:shadow-custom active:shadow-custom-active focus:shadow-custom-active focus:outline-none"
+            onClick={handleClick}
+          >
+            JUGAR
+          </button>
+          <button
+            className="flex items-center justify-center w-[150px] h-[50px] rounded-3xl border-2 border-amber-400 text-black text-sm font-semibold      cursor-pointer transition-all duration-400 font-['Source_Sans_Pro'] bg-gradient-to-t from-amber-200 via-white to-amber-300 shadow-sm hover:shadow-custom active:shadow-custom-active focus:shadow-custom-active focus:outline-none"
+            onClick={handleClick2}
+          >
+            REINICIAR JUEGO
+          </button>
+        </div>
+
+        <div className="flex flex-col justify-center items-center text-2xl text-center gap-1 p-1 col-start-6 row-start-4 col-span-2 row-span-2 rounded-lg bg-emerald-200 ">
+          <span className="font-['Source_Sans_Pro']">JUGADOR 2</span>
+          <br />
+          <span className="font-['Source_Sans_Pro']">puntaje:{puntajePj2}</span>
+        </div>
+
+        <div
+          className="flex items-center justify-center col-start-6 row-start-1 col-span-2 row-span-2 bg-emerald-300 rounded-lg shadow-md h-full w-full "
+          onDragStart={(e) => handleDragStart(e, imagenPj2, "div6")}
+        >
+          <div className="h-[55%] w-[50%] shadow-2xl rounded-3xl bg-emerald-200">
+            {imagenPj2?.DadoImg && (
+              <DivPjs.DivPjDos Src={imagenPj2?.DadoImg} Id={imagenPj2?.id} />
+            )}
+          </div>
+        </div>
+        <div className="justify-start">
+          <button>reglas!</button>
+        </div>
+        {showFinDelJuego && (
+          <FinDelJuego
+            grid1={grid1}
+            grid2={grid2}
+            puntajePj1={puntajePj1}
+            puntajePj2={puntajePj2}
+            onReiniciar={handleClosePopOver}
+          />
+        )}
+        {!showFinDelJuego && (
+          <PopOver
+            isOpen={popOverProps.isOpen}
+            onClose={() =>
+              setPopOverProps((prev) => ({ ...prev, isOpen: false }))
+            }
+            title={popOverProps.tittle}
+            message={popOverProps.message.split("\n").map((line, index) => (
+              <p key={index}>{line}</p>
+            ))}
+            onNewGame={handleClosePopOver}
+          />
+        )}
+      </div>
+      <div className="inset-y-[50vh] left-[10vw] absolute z-40">
+        <div className="bg-gradient-to-b from-stone-300/40 to-transparent p-[4px] rounded-[16px]">
+          <button
+            onClick={handleClick3}
+            className="group p-[4px] rounded-[12px] bg-gradient-to-b from-white to-stone-200/40 shadow-[0_1px_3px_rgba(0,0,0,0.5)] active:shadow-[0_0px_1px_rgba(0,0,0,0.5)] active:scale-[0.995]"
+          >
+            <div className="bg-gradient-to-b from-stone-200/40 to-white/80 rounded-[8px] px-2 py-2">
+              <div className="flex gap-2 items-center">
+                <span className="font-semibold">Como jugar</span>
+              </div>
+            </div>
+          </button>
         </div>
       </div>
-      <div className="grid grid-cols-3 grid-rows-3 gap-1 p-1 col-start-3 row-start-6 col-span-3 row-span-3 flex justify-center items-center rounded-lg bg-red-400 ">
-        {renderGrid(grid1, 1)}
-      </div>
-      <div className="grid grid-cols-3 grid-rows-3 gap-1 p-1 col-start-3 row-start-1 col-span-3 row-span-3 flex justify-center items-center rounded-lg bg-emerald-400">
-        {renderGrid(grid2, 2)}
-      </div>
-
-      <div className="flex flex-col justify-center items-center text-2xl text-center gap-1 p-1 col-start-1 row-start-4 col-span-2 row-span-2 rounded-lg bg-red-200">
-        <span className="font-['Source_Sans_Pro']">JUGADOR 1</span>
-        <br />
-        <span className="font-['Source_Sans_Pro']">puntaje:{puntajePj1}</span>
-      </div>
-
-      <div className="flex justify-center items-center gap-1 p-1 col-start-3 row-start-4 col-span-3 row-span-2 rounded-2xl bg-sky-300">
-        <button
-          className="flex items-center justify-center w-[150px] h-[50px] rounded-3xl border-2 border-amber-400 text-black text-sm font-semibold      cursor-pointer transition-all duration-400 font-['Source_Sans_Pro'] bg-gradient-to-t from-amber-200 via-white to-amber-300 shadow-sm hover:shadow-custom active:shadow-custom-active focus:shadow-custom-active focus:outline-none"
-          onClick={handleClick}
-        >
-          JUGAR
-        </button>
-        <button
-          className="flex items-center justify-center w-[150px] h-[50px] rounded-3xl border-2 border-amber-400 text-black text-sm font-semibold      cursor-pointer transition-all duration-400 font-['Source_Sans_Pro'] bg-gradient-to-t from-amber-200 via-white to-amber-300 shadow-sm hover:shadow-custom active:shadow-custom-active focus:shadow-custom-active focus:outline-none"
-          onClick={handleClick2}
-        >
-          REINICIAR JUEGO
-        </button>
-      </div>
-
-      <div className="flex flex-col justify-center items-center text-2xl text-center gap-1 p-1 col-start-6 row-start-4 col-span-2 row-span-2 rounded-lg bg-emerald-200 ">
-        <span className="font-['Source_Sans_Pro']">JUGADOR 2</span>
-        <br />
-        <span className="font-['Source_Sans_Pro']">puntaje:{puntajePj2}</span>
-      </div>
-
-      <div
-        className="flex items-center justify-center col-start-6 row-start-1 col-span-2 row-span-2 bg-emerald-300 rounded-lg shadow-md h-full w-full "
-        onDragStart={(e) => handleDragStart(e, imagenPj2, "div6")}
-      >
-        <div className="h-[55%] w-[50%] shadow-2xl rounded-3xl bg-emerald-200">
-          {imagenPj2?.DadoImg && (
-            <DivPjs.DivPjDos Src={imagenPj2?.DadoImg} Id={imagenPj2?.id} />
-          )}
-        </div>
-      </div>
-
-      {showFinDelJuego && (
-        <FinDelJuego
-          grid1={grid1}
-          grid2={grid2}
-          puntajePj1={puntajePj1}
-          puntajePj2={puntajePj2}
-          onReiniciar={handleClosePopOver}
-        />
-      )}
-      {!showFinDelJuego && (
-        <PopOver
-          isOpen={popOverProps.isOpen}
-          onClose={() =>
-            setPopOverProps((prev) => ({ ...prev, isOpen: false }))
-          }
-          title={popOverProps.tittle}
-          message={popOverProps.message}
-          onNewGame={handleClosePopOver}
-        />
-      )}
-    </div>
+    </>
   );
 }
