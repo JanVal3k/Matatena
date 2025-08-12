@@ -6,139 +6,79 @@ import { compararYEliminarImagenes } from "../clase/CompararDados";
 import ImagenRandom from "../clase/imagenRamdom";
 import FinDelJuego from "../clase/FinDelJuego";
 import PopOver from "./Popover";
+import { iaMover } from "../clase/IAnpc";
 
-//--------------------------
 export default function App() {
-  //-- Estados para las imagenes
   const [imagenPj1, setImagenPj1] = useState({});
   const [imagenPj2, setImagenPj2] = useState({});
-  //-- Estados para los grid 3x3
-  const [grid1, setGrid1] = useState(Array(9).fill(null)); // el punto .fill llena cada array con null
+  const [grid1, setGrid1] = useState(Array(9).fill(null));
   const [grid2, setGrid2] = useState(Array(9).fill(null));
-  // Estados de los div
   const [puntajePj1, setPuntajePj1] = useState(0);
   const [puntajePj2, setPuntajePj2] = useState(0);
-  /*para controlar la generacion de imagenes */
   const [needsUpdatePj1, setNeedsUpdatePj1] = useState(false);
   const [needsUpdatePj2, setNeedsUpdatePj2] = useState(false);
-  // Estados ref para for
   const iteracionesRef = useRef(0);
   const intervaloRef = useRef(null);
   const seleccionDePj = useRef(0);
-  //Estados para popOver
   const [popOverProps, setPopOverProps] = useState({
     isOpen: false,
     tittle: "",
     message: "",
   });
-  //Estado para mostar el fin del juego
   const [showFinDelJuego, setShowFinDelJuego] = useState(false);
-  // Estado para elegir jugadro o npc
-  //const [elegirNpc, setElegirNpc] = useState();
+  const [isIAInitialTurn, setIsIAInitialTurn] = useState(false);
+  // ---- IA: settings + pending ref ----
+  const [aiDifficulty, setAiDifficulty] = useState("normal");
+  const iaPendingRef = useRef(false); // si true, cuando llegue imagenPj2 la IA jugará
 
-  //funcion que randeriza las imagens o bueno actualiza el estado del cual depente que imagen se va a renderizar al primer renderizado
-  // const handleImagenesRandomizadas = useCallback((img1, img2) => {
-  //   setImagenPj1(img1);
-  //   setImagenPj2(img2);
-  // }, []);
+  const generarImagenPj1 = useCallback(() => setNeedsUpdatePj1(true), []);
+  const generarImagenPj2 = useCallback(() => setNeedsUpdatePj2(true), []);
 
-  /*funciones para poder reutilziar el componente de genera imagenes aleatoriaz en cada uno de los div*/
-
-  /*Objeto para poder reutilziar el componente de genera imagenes aleatoriaz en el div1*/
-  // const { generarImagenes } = ImagenRandom({
-  //   onImagenesGeneradas: (imagen) => setImagenPj1(imagen || {}),
-  // });
-
-  const generarImagenPj1 = useCallback(() => {
-    setNeedsUpdatePj1(true);
-  }, []);
-
-  const generarImagenPj2 = useCallback(() => {
-    setNeedsUpdatePj2(true);
-  }, []);
-
-  //Para calcular el puntaje
-  const cacularPuntaje = (grid) => {
-    return grid.reduce((sum, cell) => sum + (cell ? parseInt(cell.id) : 0), 0); // Tomamos el 'id' del grid (array de 3x3) donde se esta poniendo la imagen para comparar si tiene valor y si es asi lo vamos sumando para acumularlo
-  };
+  const cacularPuntaje = (grid) =>
+    grid.reduce((sum, cell) => sum + (cell ? parseInt(cell.id) : 0), 0);
 
   useEffect(() => {
-    // utilizamos el useEffect para que se ejecute el calcularPuntaje cada que se actualice alguno de los arrays que acumulan los valores
     setPuntajePj1(cacularPuntaje(grid1));
     setPuntajePj2(cacularPuntaje(grid2));
     const isGrid1Full = grid1.every((cell) => cell !== null);
     const isGrid2Full = grid2.every((cell) => cell !== null);
-
     if (isGrid1Full || isGrid2Full) {
       handleClick2();
       setShowFinDelJuego(true);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [grid1, grid2]);
 
-  //funcion para boton JUGAR
-  /*-----------------------------------*/
-  //--INCIO DE FUNCIONES DE RESPALDO--//
-  /*----------------------------------*/
-
-  // funcion para genera imagenes a uno o otro jugador
-  // const generarImagenesConLimite = useCallback(() => {
-  //   if (iteracionesRef.current < 6) {
-  //     if (seleccionDePj.current === 0) {
-  //       generarImagenPj1();
-  //     } else {
-  //       generarImagenPj2();
-  //     }
-  //     iteracionesRef.current++; // vamos sumando al valor para que el if con '< 6' funcione
-  //   } else {
-  //     clearInterval(intervaloRef.current);
-  //   }
-  // }, [generarImagenPj1, generarImagenPj2]);
-
-  // Función para generar imágenes alternadamente
-  // const generarImagenesAlternadas = () => {
-  //   if (iteracionesRef.current < 6) {
-  //     if (iteracionesRef.current % 2 === 0) {
-  //       setNeedsUpdatePj1(true);
-  //     } else {
-  //       setNeedsUpdatePj2(true);
-  //     }
-  //     iteracionesRef.current++;
-  //   } else {
-  //     clearInterval(intervaloRef.current);
-  //   }
-  // };
-
-  /*-----------------------------------*/
-  //--FINAL DE FUNCIONES DE RESPALDO--//
-  /*----------------------------------*/
-
-  //--------------------
   const handleClick = useCallback(() => {
-    // Limpiamos cualquier intervalo existente
-    if (intervaloRef.current) {
-      clearInterval(intervaloRef.current);
-    }
+    console.log("🎮 JUGAR clicked");
+    if (intervaloRef.current) clearInterval(intervaloRef.current);
     seleccionDePj.current = Math.floor(Math.random() * 2);
-    // Reiniciamos el contador de iteraciones
+    console.log(
+      "🎲 Quien inicia:",
+      seleccionDePj.current === 0 ? "Jugador" : "IA"
+    );
     iteracionesRef.current = 0;
 
     const generarImagenesConLimite = () => {
       if (iteracionesRef.current < 6) {
-        if (seleccionDePj.current === 0) {
-          generarImagenPj1();
-        } else {
-          generarImagenPj2();
-        }
-        iteracionesRef.current++; // vamos sumando al valor para que el if con '< 6' funcione
+        console.log(`🔄 Iteración ${iteracionesRef.current + 1}/6`);
+        seleccionDePj.current === 0 ? generarImagenPj1() : generarImagenPj2();
+        iteracionesRef.current++;
       } else {
+        console.log("✅ Generación completada");
         clearInterval(intervaloRef.current);
+
+        // Si la IA inició, marcar que es su turno inicial
+        if (seleccionDePj.current === 1) {
+          console.log("🤖 Marcando turno inicial de IA");
+          setIsIAInitialTurn(true);
+        }
       }
     };
 
-    // Iniciamos el intervalo
-    intervaloRef.current = setInterval(generarImagenesConLimite, 100);
-  }, []);
-  // BOTON PARA JUEGO NUEVO
+    intervaloRef.current = setInterval(generarImagenesConLimite, 250);
+  }, [generarImagenPj1, generarImagenPj2]);
+
   const handleClick2 = useCallback(() => {
     setPopOverProps({
       isOpen: true,
@@ -146,6 +86,7 @@ export default function App() {
       message: "Si quiere iniciar de nuevo dale en 'jugar'",
     });
   }, []);
+
   const handleClick3 = useCallback(() => {
     setPopOverProps({
       isOpen: true,
@@ -154,104 +95,174 @@ export default function App() {
         "1. Se suman puntos dependiendo del valor de cada cara del dado.\n" +
         "2. Se eliminan puntos del contrincante cuando: Se pone una cara de dado en la columna paralela y del mismo valor de esta.\n" +
         "3. El juego termina cuando se complete uno de los tableros.\n" +
-        "4. El GANADOR sera quien tenga mayor puntaje. ",
+        "4. El GANADOR será quien tenga mayor puntaje.",
     });
   }, []);
+
   const handleClosePopOver = useCallback(() => {
     setPopOverProps((prev) => ({ ...prev, isOpen: false }));
-    // reiniciamos juego
     setShowFinDelJuego(false);
     setImagenPj1({});
     setImagenPj2({});
-    //----------------------------
     setGrid1(Array(9).fill(null));
     setGrid2(Array(9).fill(null));
-    //----------------------------
     setPuntajePj1(0);
     setPuntajePj2(0);
-    //----------------------------
-    setNeedsUpdatePj1();
-    setNeedsUpdatePj2();
-    //---------------------------
+    setNeedsUpdatePj1(false);
+    setNeedsUpdatePj2(false);
     iteracionesRef.current = 0;
     intervaloRef.current = null;
     seleccionDePj.current = 0;
   }, []);
-  /*FUNCIONES PARA MOVER LA IMAGENS*/
-  // 1 se incia cuando el usuario empieza a arrastrar
+
   const handleDragStart = (e, imagen, sourceGrid) => {
-    e.dataTransfer.setData("imagen", JSON.stringify(imagen)); // se almacenan la imagen convertida a string en el objeto dataTransfer
-    e.dataTransfer.setData("sourceGrid", sourceGrid); // se almacenan la fuente de donde proviene es decir div1 en el objeto dataTransfer
+    e.dataTransfer.setData("imagen", JSON.stringify(imagen));
+    e.dataTransfer.setData("sourceGrid", sourceGrid);
   };
-  //2 Se ejecuta cuando el elemento esta sobre el grid que lo puede almazanar
-  const handleDragOver = (e) => {
-    e.preventDefault(); // simplemente hace que se permita soltar el elemento en el div
-  };
-  //3 Se ejecuta cuando el usuario suela la imagen
+
+  const handleDragOver = (e) => e.preventDefault();
+
+  // ---------------------
+  // Cuando imagenPj2 cambia y hay IA pendiente, la IA juega aquí.
+  useEffect(() => {
+    console.log("🔄 useEffect imagenPj2 disparado");
+    console.log("  - iaPendingRef.current:", iaPendingRef.current);
+    console.log("  - isIAInitialTurn:", isIAInitialTurn);
+    console.log("  - imagenPj2:", imagenPj2);
+
+    // Caso 1: IA pendiente (turnos normales)
+    if (iaPendingRef.current && imagenPj2?.DadoImg) {
+      console.log("🤖 IA jugando turno normal");
+      const iaIndex = iaMover(aiDifficulty, imagenPj2, grid2, grid1);
+      if (iaIndex !== undefined && iaIndex !== null) {
+        handleDropIA(imagenPj2, iaIndex);
+      } else {
+        generarImagenPj1();
+      }
+      iaPendingRef.current = false;
+    }
+
+    // Caso 2: IA turno inicial
+    else if (isIAInitialTurn && imagenPj2?.DadoImg) {
+      console.log("🤖 IA jugando turno inicial");
+      const iaIndex = iaMover(aiDifficulty, imagenPj2, grid2, grid1);
+      console.log("🎯 iaMover retornó índice:", iaIndex);
+
+      if (iaIndex !== undefined && iaIndex !== null) {
+        console.log("🚀 Ejecutando handleDropIA con índice:", iaIndex);
+        handleDropIA(imagenPj2, iaIndex);
+      } else {
+        console.log(
+          "❌ No hay movimiento válido, generando imagen para jugador"
+        );
+        generarImagenPj1();
+      }
+
+      // Resetear el estado
+      setIsIAInitialTurn(false);
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [imagenPj2, isIAInitialTurn]);
+
+  // ---------------------
   const handleDrop = (e, gridIndex, targetGrid) => {
     e.preventDefault();
-    const imagen = JSON.parse(e.dataTransfer.getData("imagen")); // se recupera la informacion de la imagen
-    const sourceGrid = e.dataTransfer.getData("sourceGrid"); // se recupera la informacion de la fuente o el div
+    const imagen = JSON.parse(e.dataTransfer.getData("imagen"));
+    const sourceGrid = e.dataTransfer.getData("sourceGrid");
 
-    //Verificamos si el arrastre es válido
+    // Verificamos si el arrastre es válido
     if (
       ((sourceGrid === "div1" && targetGrid === 1) ||
         (sourceGrid === "div6" && targetGrid === 2)) &&
       (targetGrid === 1 ? grid1[gridIndex] === null : grid2[gridIndex] === null)
     ) {
-      const columna = gridIndex % 3; // Calculamos la columna (0, 1, o 2)
-
-      // Creamos copias de los grids para modificarlos
+      const columna = gridIndex % 3;
       let newGrid1 = [...grid1];
       let newGrid2 = [...grid2];
 
       if (targetGrid === 1) {
-        newGrid1[gridIndex] = imagen; // Colocamos la nueva imagen en grid1
-        // Comparamos y eliminamos imágenes coincidentes en grid2
+        // El jugador 1 coloca
+        newGrid1[gridIndex] = imagen;
         newGrid2 = compararYEliminarImagenes(newGrid1, newGrid2, columna);
 
-        setGrid1(newGrid1); // actualiza los grids
+        setGrid1(newGrid1);
         setGrid2(newGrid2);
-        // Generar imágenes para el jugador 2 con límite y retraso
-        iteracionesRef.current = 0;
-        const interval = setInterval(() => {
-          if (iteracionesRef.current < 6) {
-            setImagenPj1({});
+
+        // Verificar si el juego terminó
+        const isGrid1Full = newGrid1.every((cell) => cell !== null);
+        const isGrid2Full = newGrid2.every((cell) => cell !== null);
+
+        if (!isGrid1Full && !isGrid2Full) {
+          // ✅ CAMBIO: Marcar que la IA jugará y mostrar su animación
+          console.log("🎮 Jugador jugó, ahora turno de IA con animación");
+          iaPendingRef.current = true;
+
+          // Pequeño delay para mostrar el cambio, luego generar imagen de IA
+          setTimeout(() => {
             generarImagenPj2();
-            iteracionesRef.current++;
-          } else {
-            clearInterval(interval);
-          }
-        }, 100);
+          }, 200);
+        }
       } else {
-        newGrid2[gridIndex] = imagen; // Colocamos la nueva imagen en grid2
-        // Comparamos y eliminamos imágenes coincidentes en grid1
+        // Caso de grid2 (por si acaso, aunque normalmente es la IA)
+        newGrid2[gridIndex] = imagen;
         newGrid1 = compararYEliminarImagenes(newGrid2, newGrid1, columna);
 
         setGrid1(newGrid1);
         setGrid2(newGrid2);
-        // Generar imágenes para el jugador 2 con límite y retraso
-        iteracionesRef.current = 0;
-        const interval = setInterval(() => {
-          if (iteracionesRef.current < 6) {
-            setImagenPj2({});
-            generarImagenPj1();
-            iteracionesRef.current++;
-          } else {
-            clearInterval(interval);
-          }
-        }, 100);
+
+        const isGrid1Full = newGrid1.every((cell) => cell !== null);
+        const isGrid2Full = newGrid2.every((cell) => cell !== null);
+
+        if (!isGrid1Full && !isGrid2Full) {
+          generarImagenPj1();
+        }
       }
     }
   };
-  //renderizar el grid
-  const renderGrid = (grid, playerGrid) => {
-    return grid.map((cell, index) => (
+
+  //Simulación del Drop por parte de la IA
+  const handleDropIA = (imagen, gridIndex) => {
+    if (!imagen?.DadoImg) return;
+    const columna = gridIndex % 3;
+    let newGrid2 = [...grid2];
+    let newGrid1 = [...grid1];
+
+    newGrid2[gridIndex] = imagen;
+    newGrid1 = compararYEliminarImagenes(newGrid2, newGrid1, columna);
+    setGrid1(newGrid1);
+    setGrid2(newGrid2);
+
+    // ✅ CAMBIO: En lugar de generar imagen para jugador, generar para IA
+    setImagenPj2({});
+
+    // Verificar si el juego terminó antes de continuar
+    const isGrid1Full = newGrid1.every((cell) => cell !== null);
+    const isGrid2Full = newGrid2.every((cell) => cell !== null);
+
+    if (!isGrid1Full && !isGrid2Full) {
+      // Solo continuar si el juego no terminó
+      console.log("🤖 IA generará nueva imagen para su próximo turno");
+
+      // Pequeño delay y luego generar imagen para el jugador
+      setTimeout(() => {
+        generarImagenPj1();
+      }, 300); // Dar tiempo para que se vea el cambio
+    }
+  };
+
+  // selector de dificultad
+  const handleDifficultyChange = useCallback((e) => {
+    setAiDifficulty(e.target.value);
+  }, []);
+  //------------------------------------------
+  const renderGrid = (grid, playerGrid) =>
+    grid.map((cell, index) => (
       <div
         key={index}
         className="flex justify-center shadow-xl rounded-2xl border-2 items-center w-full h-full"
         onDragOver={handleDragOver}
-        onDrop={(e) => handleDrop(e, index, playerGrid)} //esto prepara el escuchador o LISTENER para cuando se ejecute el handleDrop al soltar la imagen en uno de los grid
+        onDrop={(e) => handleDrop(e, index, playerGrid)}
       >
         {cell && (
           <img
@@ -263,9 +274,6 @@ export default function App() {
         )}
       </div>
     ));
-  };
-
-  /*FUNCIONES PARA MOVER LA IMAGENS*/
 
   return (
     <>
@@ -311,7 +319,7 @@ export default function App() {
           <span className="font-['Source_Sans_Pro']">puntaje:{puntajePj1}</span>
         </div>
 
-        <div className="flex justify-center items-center gap-1 p-1 col-start-3 row-start-4 col-span-3 row-span-2 rounded-2xl bg-sky-300">
+        {/* <div className="flex justify-center items-center gap-1 p-1 col-start-3 row-start-4 col-span-3 row-span-2 rounded-2xl bg-sky-300">
           <button
             className="flex items-center justify-center w-[150px] h-[50px] rounded-3xl border-2 border-amber-400 text-black text-sm font-semibold      cursor-pointer transition-all duration-400 font-['Source_Sans_Pro'] bg-gradient-to-t from-amber-200 via-white to-amber-300 shadow-sm hover:shadow-custom active:shadow-custom-active focus:shadow-custom-active focus:outline-none"
             onClick={handleClick}
@@ -324,8 +332,66 @@ export default function App() {
           >
             REINICIAR JUEGO
           </button>
+        </div> */}
+        <div className="flex flex-col justify-center items-center gap-3 p-3 col-start-3 row-start-4 col-span-3 row-span-2 rounded-2xl bg-sky-300">
+          <div className="flex justify-center items-center gap-1">
+            <button
+              className="flex items-center justify-center w-[150px] h-[50px] rounded-3xl border-2 border-amber-400 text-black text-sm font-semibold cursor-pointer transition-all duration-400 font-['Source_Sans_Pro'] bg-gradient-to-t from-amber-200 via-white to-amber-300 shadow-sm hover:shadow-custom active:shadow-custom-active focus:shadow-custom-active focus:outline-none"
+              onClick={handleClick}
+            >
+              JUGAR
+            </button>
+            <button
+              className="flex items-center justify-center w-[150px] h-[50px] rounded-3xl border-2 border-amber-400 text-black text-sm font-semibold cursor-pointer transition-all duration-400 font-['Source_Sans_Pro'] bg-gradient-to-t from-amber-200 via-white to-amber-300 shadow-sm hover:shadow-custom active:shadow-custom-active focus:shadow-custom-active focus:outline-none"
+              onClick={handleClick2}
+            >
+              REINICIAR JUEGO
+            </button>
+          </div>
+          <div className="relative">
+            <select
+              className="flex items-center justify-center w-[150px] h-[50px] rounded-3xl border-2 border-amber-400 text-black text-sm font-semibold cursor-pointer transition-all duration-400 font-['Source_Sans_Pro'] bg-gradient-to-t from-amber-200 via-white to-amber-300 shadow-sm hover:shadow-custom active:shadow-custom-active focus:shadow-custom-active focus:outline-none appearance-none text-center pr-10"
+              onChange={handleDifficultyChange}
+              defaultValue="facil"
+            >
+              <option
+                value="facil"
+                className="bg-gradient-to-t from-amber-200 via-white to-amber-300 text-black font-semibold py-2"
+              >
+                FÁCIL
+              </option>
+              <option
+                value="normal"
+                className="bg-gradient-to-t from-amber-200 via-white to-amber-300 text-black font-semibold py-2"
+              >
+                NORMAL
+              </option>
+              <option
+                value="dificil"
+                className="bg-gradient-to-t from-amber-200 via-white to-amber-300 text-black font-semibold py-2"
+              >
+                DIFÍCIL
+              </option>
+            </select>
+            <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
+              <svg
+                width="12"
+                height="8"
+                viewBox="0 0 12 8"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M1 1L6 6L11 1"
+                  stroke="#000000"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </div>
+          </div>
         </div>
-
         <div className="flex flex-col justify-center items-center text-2xl text-center gap-1 p-1 col-start-6 row-start-4 col-span-2 row-span-2 rounded-lg bg-emerald-200 ">
           <span className="font-['Source_Sans_Pro']">JUGADOR 2</span>
           <br />
