@@ -28,7 +28,7 @@ export default function App() {
   const [showFinDelJuego, setShowFinDelJuego] = useState(false);
   const [isIAInitialTurn, setIsIAInitialTurn] = useState(false);
   // ---- IA: settings + pending ref ----
-  const [aiDifficulty, setAiDifficulty] = useState("normal");
+  const [aiDifficulty, setAiDifficulty] = useState("facil");
   const iaPendingRef = useRef(false); // si true, cuando llegue imagenPj2 la IA jugará
 
   const generarImagenPj1 = useCallback(() => setNeedsUpdatePj1(true), []);
@@ -124,42 +124,52 @@ export default function App() {
 
   // ---------------------
   // Cuando imagenPj2 cambia y hay IA pendiente, la IA juega aquí.
+  // Reemplaza tu useEffect actual con este:
+
   useEffect(() => {
     console.log("🔄 useEffect imagenPj2 disparado");
     console.log("  - iaPendingRef.current:", iaPendingRef.current);
     console.log("  - isIAInitialTurn:", isIAInitialTurn);
     console.log("  - imagenPj2:", imagenPj2);
 
-    // Caso 1: IA pendiente (turnos normales)
+    // Caso 1: IA pendiente (turnos normales) - CON DELAY
     if (iaPendingRef.current && imagenPj2?.DadoImg) {
-      console.log("🤖 IA jugando turno normal");
-      const iaIndex = iaMover(aiDifficulty, imagenPj2, grid2, grid1);
-      if (iaIndex !== undefined && iaIndex !== null) {
-        handleDropIA(imagenPj2, iaIndex);
-      } else {
-        generarImagenPj1();
-      }
-      iaPendingRef.current = false;
+      console.log("🤖 IA jugando turno normal (con delay para animación)");
+
+      // Agregar delay para que se vea la animación
+      setTimeout(() => {
+        const iaIndex = iaMover(aiDifficulty, imagenPj2, grid2, grid1);
+        if (iaIndex !== undefined && iaIndex !== null) {
+          handleDropIA(imagenPj2, iaIndex);
+        } else {
+          generarImagenPj1();
+        }
+        iaPendingRef.current = false;
+      }, 1000); // 1 segundo para ver la animación - ajusta este valor según necesites
     }
 
-    // Caso 2: IA turno inicial
+    // Caso 2: IA turno inicial (mantener sin delay o con menos delay)
     else if (isIAInitialTurn && imagenPj2?.DadoImg) {
       console.log("🤖 IA jugando turno inicial");
-      const iaIndex = iaMover(aiDifficulty, imagenPj2, grid2, grid1);
-      console.log("🎯 iaMover retornó índice:", iaIndex);
 
-      if (iaIndex !== undefined && iaIndex !== null) {
-        console.log("🚀 Ejecutando handleDropIA con índice:", iaIndex);
-        handleDropIA(imagenPj2, iaIndex);
-      } else {
-        console.log(
-          "❌ No hay movimiento válido, generando imagen para jugador"
-        );
-        generarImagenPj1();
-      }
+      // Pequeño delay también aquí si quieres (opcional)
+      setTimeout(() => {
+        const iaIndex = iaMover(aiDifficulty, imagenPj2, grid2, grid1);
+        console.log("🎯 iaMover retornó índice:", iaIndex);
 
-      // Resetear el estado
-      setIsIAInitialTurn(false);
+        if (iaIndex !== undefined && iaIndex !== null) {
+          console.log("🚀 Ejecutando handleDropIA con índice:", iaIndex);
+          handleDropIA(imagenPj2, iaIndex);
+        } else {
+          console.log(
+            "❌ No hay movimiento válido, generando imagen para jugador"
+          );
+          generarImagenPj1();
+        }
+
+        // Resetear el estado
+        setIsIAInitialTurn(false);
+      }, 800); // Menos delay en el turno inicial si quieres
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -194,17 +204,12 @@ export default function App() {
         const isGrid2Full = newGrid2.every((cell) => cell !== null);
 
         if (!isGrid1Full && !isGrid2Full) {
-          // ✅ CAMBIO: Marcar que la IA jugará y mostrar su animación
-          console.log("🎮 Jugador jugó, ahora turno de IA con animación");
           iaPendingRef.current = true;
-
-          // Pequeño delay para mostrar el cambio, luego generar imagen de IA
           setTimeout(() => {
             generarImagenPj2();
-          }, 200);
+          }, 500);
         }
       } else {
-        // Caso de grid2 (por si acaso, aunque normalmente es la IA)
         newGrid2[gridIndex] = imagen;
         newGrid1 = compararYEliminarImagenes(newGrid2, newGrid1, columna);
 
@@ -220,8 +225,6 @@ export default function App() {
       }
     }
   };
-
-  //Simulación del Drop por parte de la IA
   const handleDropIA = (imagen, gridIndex) => {
     if (!imagen?.DadoImg) return;
     const columna = gridIndex % 3;
@@ -233,25 +236,18 @@ export default function App() {
     setGrid1(newGrid1);
     setGrid2(newGrid2);
 
-    // ✅ CAMBIO: En lugar de generar imagen para jugador, generar para IA
     setImagenPj2({});
 
-    // Verificar si el juego terminó antes de continuar
     const isGrid1Full = newGrid1.every((cell) => cell !== null);
     const isGrid2Full = newGrid2.every((cell) => cell !== null);
 
     if (!isGrid1Full && !isGrid2Full) {
-      // Solo continuar si el juego no terminó
       console.log("🤖 IA generará nueva imagen para su próximo turno");
-
-      // Pequeño delay y luego generar imagen para el jugador
       setTimeout(() => {
         generarImagenPj1();
-      }, 300); // Dar tiempo para que se vea el cambio
+      }, 500);
     }
   };
-
-  // selector de dificultad
   const handleDifficultyChange = useCallback((e) => {
     setAiDifficulty(e.target.value);
   }, []);
@@ -319,20 +315,6 @@ export default function App() {
           <span className="font-['Source_Sans_Pro']">puntaje:{puntajePj1}</span>
         </div>
 
-        {/* <div className="flex justify-center items-center gap-1 p-1 col-start-3 row-start-4 col-span-3 row-span-2 rounded-2xl bg-sky-300">
-          <button
-            className="flex items-center justify-center w-[150px] h-[50px] rounded-3xl border-2 border-amber-400 text-black text-sm font-semibold      cursor-pointer transition-all duration-400 font-['Source_Sans_Pro'] bg-gradient-to-t from-amber-200 via-white to-amber-300 shadow-sm hover:shadow-custom active:shadow-custom-active focus:shadow-custom-active focus:outline-none"
-            onClick={handleClick}
-          >
-            JUGAR
-          </button>
-          <button
-            className="flex items-center justify-center w-[150px] h-[50px] rounded-3xl border-2 border-amber-400 text-black text-sm font-semibold      cursor-pointer transition-all duration-400 font-['Source_Sans_Pro'] bg-gradient-to-t from-amber-200 via-white to-amber-300 shadow-sm hover:shadow-custom active:shadow-custom-active focus:shadow-custom-active focus:outline-none"
-            onClick={handleClick2}
-          >
-            REINICIAR JUEGO
-          </button>
-        </div> */}
         <div className="flex flex-col justify-center items-center gap-3 p-3 col-start-3 row-start-4 col-span-3 row-span-2 rounded-2xl bg-sky-300">
           <div className="flex justify-center items-center gap-1">
             <button
@@ -393,7 +375,7 @@ export default function App() {
           </div>
         </div>
         <div className="flex flex-col justify-center items-center text-2xl text-center gap-1 p-1 col-start-6 row-start-4 col-span-2 row-span-2 rounded-lg bg-emerald-200 ">
-          <span className="font-['Source_Sans_Pro']">JUGADOR 2</span>
+          <span className="font-['Source_Sans_Pro']">IA: {aiDifficulty}</span>
           <br />
           <span className="font-['Source_Sans_Pro']">puntaje:{puntajePj2}</span>
         </div>
