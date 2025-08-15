@@ -83,7 +83,7 @@ export default function App() {
     setPopOverProps({
       isOpen: true,
       tittle: "Reiniciando juego...",
-      message: "Si quiere iniciar de nuevo dale en 'jugar'",
+      message: "Si quiere iniciar de nuevo dale en 'Aceptar'",
     });
   }, []);
 
