@@ -1,0 +1,69 @@
+{
+  "gameTitle": "Parry Dice",
+  "tagline": "Roll, Parry and steal the Win.",
+  "welcome": {
+    "playGame": "Play Game",
+    "howToPlay": "How to Play",
+    "selectDifficulty": "SELECT DIFFICULTY"
+  },
+  "difficulty": {
+    "easy": "Easy",
+    "medium": "Medium",
+    "hard": "Hard",
+    "easyDesc": "Perfect for beginners",
+    "mediumDesc": "Balanced challenge",
+    "hardDesc": "For experts only"
+  },
+  "howToPlay": {
+    "title": "How to Play",
+    "close": "Close how to play",
+    "gotIt": "Got it!",
+    "startPlaying": "Start Playing",
+    "sections": [
+      {
+        "title": "How to Win",
+        "description": "The game ends when either player's board is full. The player with the highest total score wins, even if their board is not completely filled."
+      },
+      {
+        "title": "Dice Removal",
+        "description": "When you place a die in a column that matches an opponent's column, if the opponent has a die with the same value in that column, their matching die is removed."
+      },
+      {
+        "title": "Pairs and Triples",
+        "description": "Available in Medium and Hard difficulties only.",
+        "subItems": [
+          {
+            "title": "Pairs",
+            "description": "Two dice with the same value in the same column receive a bonus equal to half their combined base value. For example, a pair of 3s has a base value of 6 plus a bonus of 3, for a total of 9 points."
+          },
+          {
+            "title": "Triples",
+            "description": "Three dice with the same value in the same column receive a bonus equal to two-thirds of their combined base value. For example, a trio of 3s has a base value of 9 plus a bonus of 6, for a total of 15 points."
+          }
+        ]
+      }
+    ]
+  },
+  "playing": {
+    "header": "Parry Dice",
+    "playerTurn": "Your turn - drag dice to empty cell",
+    "rollingDice": "Rolling dice...",
+    "iaRolling": "IA is rolling...",
+    "readyToDrop": "Ready to do the drop: ",
+    "iaValue": "IA Value: "
+  },
+  "score": {
+    "player": "Player",
+    "ia": "IA"
+  },
+  "modal": {
+    "backToMenu": "Back to Menu",
+    "playAgain": "Play Again",
+    "youWin": "You Win!",
+    "iaWins": "IA Wins!",
+    "tie": "Tie Game!"
+  },
+  "common": {
+    "visitedKey": "parry-dice-visited"
+  }
+}

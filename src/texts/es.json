@@ -1,0 +1,69 @@
+{
+  "gameTitle": "Parry Dice",
+  "tagline": "Lanza, Detiene y roba la Victoria.",
+  "welcome": {
+    "playGame": "Jugar",
+    "howToPlay": "Cómo Jugar",
+    "selectDifficulty": "SELECCIONAR DIFICULTAD"
+  },
+  "difficulty": {
+    "easy": "Fácil",
+    "medium": "Medio",
+    "hard": "Difícil",
+    "easyDesc": "Perfecto para principiantes",
+    "mediumDesc": "Desafío equilibrado",
+    "hardDesc": "Solo para expertos"
+  },
+  "howToPlay": {
+    "title": "Cómo Jugar",
+    "close": "Cerrar cómo jugar",
+    "gotIt": "¡Entendido!",
+    "startPlaying": "Empezar a Jugar",
+    "sections": [
+      {
+        "title": "Cómo Ganar",
+        "description": "El juego termina cuando el tablero de cualquiera de los jugadores está lleno. El jugador con la puntuación total más alta gana, incluso si su tablero no está completamente lleno."
+      },
+      {
+        "title": "Eliminación de Dados",
+        "description": "Cuando colocas un dado en una columna que coincide con la del oponente, si el oponente tiene un dado con el mismo valor en esa columna, su dado coincidente es eliminado."
+      },
+      {
+        "title": "Pares y Triples",
+        "description": "Disponible solo en dificultades Media y Difícil.",
+        "subItems": [
+          {
+            "title": "Pares",
+            "description": "Dos dados con el mismo valor en la misma columna reciben un bono igual a la mitad de su valor base combinado. Por ejemplo, un par de 3s tiene un valor base de 6 más un bono de 3, para un total de 9 puntos."
+          },
+          {
+            "title": "Triples",
+            "description": "Tres dados con el mismo valor en la misma columna reciben un bono igual a dos tercios de su valor base combinado. Por ejemplo, un trío de 3s tiene un valor base de 9 más un bono de 6, para un total de 15 puntos."
+          }
+        ]
+      }
+    ]
+  },
+  "playing": {
+    "header": "Parry Dice",
+    "playerTurn": "Tu turno - arrastra el dado a una casilla vacía",
+    "rollingDice": "Lanzando dados...",
+    "iaRolling": "La IA está lanzando...",
+    "readyToDrop": "Listo para soltar: ",
+    "iaValue": "Valor IA: "
+  },
+  "score": {
+    "player": "Jugador",
+    "ia": "IA"
+  },
+  "modal": {
+    "backToMenu": "Volver al Menú",
+    "playAgain": "Jugar de Nuevo",
+    "youWin": "¡Ganaste!",
+    "iaWins": "¡IA Gana!",
+    "tie": "¡Empate!"
+  },
+  "common": {
+    "visitedKey": "parry-dice-visited"
+  }
+}

@@ -1,28 +1,45 @@
-# :video_game: Matatena :game_die:
+# 🎮 Parry Dice 🎲
 
-**Matatena** es un minijuego inspirado en uno de los juegos presentes en **Cult of the Lamb**. Este proyecto ha sido desarrollado con **HTML**, **JavaScript**, **React**, y **Tailwind CSS**. Es un proyecto sin ánimo de lucro y se ha creado únicamente con fines educativos y de portafolio, sin intención de infringir los derechos de autor de **Cult of the Lamb**.
+**Parry Dice** is a dice-based strategy game inspired by a minigame featured in *Cult of the Lamb*. The project was developed using **React, TypeScript, HTML, and Tailwind CSS**, with a focus on recreating the core gameplay while adding its own identity and features.
 
-## Descripción del Juego :video_game:
+## 🎮 Game Description
 
-- **Jugadores**: 2 jugadores, cada uno con un tablero de 9 espacios.
-- **Mecánica**:
-  - Al iniciar el juego, se selecciona al azar algino de los dos jugadores, y se le genera una cara de dado aleatoria (con un valor de entre 1 y 6).
-  - El jugador debe arrastrar esa cara de dado a uno de los espacios en su tablero.
-  - Luego, se genera una nueva cara de dado aleatoria para el oponente.
-  - El objetivo es llenar el tablero y acumular el mayor puntaje posible, pero con una estrategia importante:
-    - Si un jugador coloca un dado cuyo valor coincide con el de la misma columna del oponente, el dado del oponente se restará del puntaje y se eliminará del tablero.
-    - Esto abre el espacio para que se coloque un nuevo dado.
+- **Players:** 2 players: the human player and the AI opponent.
+- **Game boards:** Each player has a board with 9 spaces.
+- **Objective:** Achieve the highest total score before either player's board is completely filled.
 
-## Tecnologías Utilizadas
+### 🎲 Core Mechanics
 
-- **<img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/react/react-original-wordmark.svg" alt="react" width="40" height="40"/>** para la gestión de componentes.
-- **<img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/html5/html5-original-wordmark.svg" alt="html5" width="40" height="40"/> y <img src="https://www.vectorlogo.zone/logos/tailwindcss/tailwindcss-icon.svg" alt="tailwind" width="40" height="40"/>** para la estructura y el diseño.
-- <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/javascript/javascript-original.svg" alt="javascript" width="40" height="40"/> para la lógica del juego.
+- **Dice Placement:** Players take turns placing randomly generated dice, with values ranging from 1 to 6, into empty spaces on their boards.
+- **Dice Removal:** When a player places a die in a column where the opponent has a die with the same value, the opponent's matching die is removed from the board.
+- **Scoring:** Each die contributes its face value to the player's total score.
+- **Pairs and Triples:** In Medium and Hard difficulties, placing two or three dice with the same value in the same column grants a scoring bonus:
+  - **Pairs:** Receive a bonus equal to half the sum of their base values. For example, a pair of 3s scores 9 points in total.
+  - **Triples:** Receive a bonus equal to two-thirds of the sum of their base values. For example, a triple of 3s scores 15 points in total.
 
-## Notas
+### 🧠 Difficulty Levels
 
-Este proyecto es exclusivamente para aprendizaje y no tiene fines comerciales. **Cult of the Lamb** y sus elementos son propiedad de sus respectivos creadores.
+- **Easy:** A beginner-friendly opponent with random decision-making.
+- **Medium:** A more strategic opponent that considers combinations and scoring opportunities.
+- **Hard:** A more challenging opponent that evaluates possible moves and considers the opponent's responses.
+
+## 🛠️ Technologies Used
+
+- **React:** Component-based user interface.
+- **TypeScript:** Game logic and interactions.
+- **HTML5:** Application structure.
+- **Tailwind CSS:** Styling and responsive layout.
+
+## 📌 Project Status
+
+The single-player version is functional. Future development may include multiplayer support, additional mechanics, and further improvements to the overall gameplay experience.
+
+## ⚖️ Disclaimer
+
+Parry Dice is an independent educational and portfolio project. It is inspired by a minigame featured in *Cult of the Lamb*, but it is not an official product and is not affiliated with its developers or publishers.
+
+All third-party intellectual property remains the property of its respective owners.
 
 ---
 
-**¡Gracias por ver!**
+**Roll. Parry. Steal the Win.** 🎲
